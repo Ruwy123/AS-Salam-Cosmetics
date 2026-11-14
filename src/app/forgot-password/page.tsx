@@ -1,3 +1,5 @@
+import { PasswordResetForm } from "@/components/password-reset-form";
+
 export default function ForgotPasswordPage() {
   return (
     <div className="container-shell py-16">
@@ -12,24 +14,7 @@ export default function ForgotPasswordPage() {
           Enter your email and we’ll send instructions to reset your password.
         </p>
 
-        <form className="mt-8 space-y-5">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
-              Email
-            </label>
-            <input
-              type="email"
-              className="w-full rounded-full border border-slate-200 bg-[#F8FAF9] px-4 py-3 text-sm text-slate-700 outline-none focus:border-[#40BFC1]"
-              placeholder="you@example.com"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full rounded-full bg-[#40BFC1] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#2fa5a7]"
-          >
-            Send reset link
-          </button>
-        </form>
+        <PasswordResetForm mode="request" />
       </div>
     </div>
   );

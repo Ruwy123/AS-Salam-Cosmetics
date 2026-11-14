@@ -5,6 +5,7 @@ export type Product = {
   price: number;
   compareAtPrice?: number;
   category: string;
+  categorySlug?: string;
   description: string;
   shortDescription: string;
   image: string;

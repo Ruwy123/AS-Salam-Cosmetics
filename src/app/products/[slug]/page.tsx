@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
@@ -9,18 +10,19 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
-import { products } from "@/lib/mock-data";
+import { getStoreCatalog } from "@/lib/catalog";
 
-export default function ProductDetailsPage({
+async function ProductDetailsContent({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const product = products.find((item) => item.slug === params.slug);
+  const [{ slug }, catalog] = await Promise.all([params, getStoreCatalog()]);
+  const product = catalog.products.find((item) => item.slug === slug);
 
   if (!product) return notFound();
 
-  const relatedProducts = products
+  const relatedProducts = catalog.products
     .filter(
       (item) => item.category === product.category && item.id !== product.id,
     )
@@ -178,5 +180,17 @@ export default function ProductDetailsPage({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductDetailsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  return (
+    <Suspense fallback={<div className="container-shell min-h-screen py-10" />}>
+      <ProductDetailsContent params={params} />
+    </Suspense>
   );
 }

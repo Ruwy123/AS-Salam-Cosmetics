@@ -46,3 +46,39 @@ img {
 .container-shell {
   @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
 }
+
+.ritual-visual {
+  isolation: isolate;
+}
+
+.ritual-image {
+  opacity: 0;
+  transform: scale(1.055);
+  transition:
+    opacity 700ms ease,
+    transform 1400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ritual-image.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.ritual-chapter {
+  opacity: 0.46;
+}
+
+.ritual-chapter.is-active {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ritual-image,
+  .ritual-chapter {
+    transition: none;
+  }
+
+  .ritual-image {
+    transform: none;
+  }
+}

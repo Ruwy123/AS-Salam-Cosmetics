@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AS-Salam Cosmetics
 
-## Getting Started
+Premium beauty storefront built with Next.js App Router, TypeScript, Tailwind CSS, and Supabase.
 
-First, run the development server:
+## Local Setup
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_SITE_URL`. The service-role key is not used by browser or storefront code and must never be exposed with a `NEXT_PUBLIC_` prefix.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Supabase Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a Supabase project and configure the local and deployed site URLs in **Authentication → URL Configuration**.
+2. Set the project URL and anon/publishable key in `.env.local`.
+3. Run `supabase/schema.sql` in the Supabase SQL Editor. This creates the tables, signup profile trigger, role guard, grants, and row-level security policies. Do not connect the app to customer data before applying it.
+4. Run `supabase/seed.sql` in the SQL Editor to insert the six starter catalog products and categories. It only inserts missing slugs; it does not overwrite existing catalog records.
+5. Configure Supabase email confirmation links to use `/auth/callback?next=/account` and password recovery links to use `/auth/callback?next=/reset-password`.
+6. Register your own account, confirm its email if confirmation is enabled, then promote that account once in the SQL Editor:
 
-## Learn More
+```sql
+update public.profiles
+set role = 'admin'
+where email = 'your-admin-email@example.com';
+```
 
-To learn more about Next.js, take a look at the following resources:
+Customer registration always creates a `customer` profile. The profile trigger rejects role changes from normal authenticated requests, and the admin area checks the profile role on the server for every request. Never promote users from a client-side form.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Checks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build
+npm run lint
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Valid Supabase environment variables are required for authentication and database access. The storefront reads active products and categories from Supabase; in development only, sample fixtures are shown while the live catalog is empty or unavailable.
