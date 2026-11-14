@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { signOutAction } from "@/app/auth-actions";
 import {
   LayoutDashboard,
   Package,
@@ -51,10 +52,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
 
-        <button className="mt-8 flex w-full items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:border-[#40BFC1] hover:text-[#40BFC1]">
-          <LogOut className="h-4 w-4" />
-          Logout
-        </button>
+        <form action={signOutAction}>
+          <button className="mt-8 flex w-full items-center gap-3 rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:border-[#40BFC1] hover:text-[#40BFC1]">
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
+        </form>
       </aside>
 
       <main className="ml-72 min-h-screen p-6 lg:p-8">{children}</main>
